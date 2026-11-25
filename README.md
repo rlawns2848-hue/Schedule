@@ -1,206 +1,106 @@
-# AIRLINK — 냉·난방 AS기사 스케줄 관리 시스템
+# AIR LINK — 냉·난방 AS기사 스케줄 관리 시스템
 
-고객이 접수한 냉·난방 AS 건을 **관리자가 기사에게 배정하고, 기사가 결과를 보고하고, 고객이 만족도를 남기는** 순환 구조의 웹 서비스입니다.
-저는 그중 **관리자 일정 관리 — 캘린더 조회와 기사 배정** 을 맡았습니다.
+> 고객 접수 → **관리자 배정** → 기사 보고 → 만족도로 이어지는 A/S 순환 구조에서, 관리자가 기사에게 일을 배정하는 화면
 
-> 4인 팀 프로젝트 **Hello World** (2026.09.08 ~ 09.17 · 기능 구현은 09.15까지, 이후 발표 준비) · 그린AI캠퍼스 평생교육원
-> 이 저장소는 팀 저장소 [`ung-Jin/Schedule`](https://github.com/ung-Jin/Schedule) 의 fork 입니다.
+![Java](https://img.shields.io/badge/Java_17-437291?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![MyBatis](https://img.shields.io/badge/MyBatis-000000?style=flat-square)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=mariadb&logoColor=white)
+![FullCalendar](https://img.shields.io/badge/FullCalendar-2C3E50?style=flat-square)
 
----
+## 한눈에 보기
 
-## 담당 범위
+| 구분 | 내용 |
+| --- | --- |
+| 팀·기간 | 4인 · 2026.09.08 ~ 09.17 (10일) |
+| **내 담당** | **관리자 일정 관리 화면 전체 — Controller 부터 CSS 까지 (약 1,150줄)** |
+| 기술 | Java 17 · Spring Boot · MyBatis · MariaDB · Thymeleaf · FullCalendar |
+| 원본 저장소 | [`ung-Jin/Schedule`](https://github.com/ung-Jin/Schedule) 의 fork |
+| 작업일지 | [Notion](https://scratched-ceramic-15c.notion.site/40090bcc7b0780409d99e0e6757d8e30) |
 
-**`schedule` 패키지와 관리자 일정관리 화면 전체를 맡았습니다.**
+세 프로젝트 중 **처음이자 가장 짧았던** 과제입니다. 화면 하나를 받아 **화면 → JS → Controller → Service → Mapper → DB** 한 세로줄을 끝까지 맡았습니다.
 
-📁 **[`src/main/java/com/green/Schedule/schedule`](https://github.com/rlawns2848-hue/Schedule/tree/dev/src/main/java/com/green/Schedule/schedule)**
+## 내가 만든 것
 
-| 파일 | 하는 일 |
-|---|---|
-| `controller/ScheduleController.java` | 일정관리 페이지 렌더링 · 배정 폼 처리 |
-| `service/ScheduleService.java` | 배정 저장 + 접수 상태 변경을 한 흐름으로 |
-| `mapper/ScheduleMapper.java` | DB 접근 인터페이스 |
-| `dto/ScheduleDTO.java` | 스케줄 한 건 (기사·접수 정보를 중첩으로 포함) |
-| `resources/mapper/schedule-mapper.xml` | 조회·배정 쿼리와 resultMap |
-| `templates/pages/schedule/admin_schedule.html` | 좌 캘린더 · 우 배정 폼 |
-| `static/js/pages/schedule/admin_schedule.js` | FullCalendar 연동 · 기사 필터 · 중복 배정 검증 |
-| `static/css/pages/schedule/admin_schedule.css` | 상태별 색상 · 범례 · 카드 레이아웃 |
+| | 하는 일 | 파일 |
+| --- | --- | --- |
+| **일정 캘린더** | 기준 날짜가 다른 접수와 배정을 한 달력에 · 상태별 4색 | [`admin_schedule.js`](src/main/resources/static/js/pages/schedule/admin_schedule.js) 373줄 |
+| **기사 배정** | 날짜·시간을 따로 받아 전송 직전 하나로 · 배정과 접수 상태 변경을 한 흐름으로 | [`ScheduleService`](src/main/java/com/green/Schedule/schedule/service/ScheduleService.java) 51줄 |
+| **중복 배정 검증** | 같은 기사의 시간대 겹침 차단 · 충돌한 기사명과 시간을 에러에 같이 | [`admin_schedule.js#L214`](src/main/resources/static/js/pages/schedule/admin_schedule.js#L214) |
+| **조회 쿼리** | 스케줄 · 기사 · 접수를 한 번에, 조회 전용 resultMap 으로 | [`schedule-mapper.xml`](src/main/resources/mapper/schedule-mapper.xml) 129줄 |
+| **화면 틀·스타일** | 달력 레이아웃, 배정 폼, 범례 | [`admin_schedule.css`](src/main/resources/static/css/pages/schedule/admin_schedule.css) 353줄 |
 
-🔗 **[팀 저장소에서 제 커밋만 보기](https://github.com/ung-Jin/Schedule/commits/dev?author=rlawns2848-hue)**
+<details><summary>팀원 담당</summary>
 
----
+접수·기사 보고·만족도 조사·회원/로그인은 팀원 담당입니다.
 
-## 주요 기능
+</details>
 
-### 1. 일정 캘린더
+## 화면
 
-접수 건과 배정된 일정을 **한 캘린더에 같이** 띄웁니다. 기준 날짜가 서로 다릅니다.
+![관리자 일정 관리](docs/admin-schedule.png)
 
-```
-AS_REQUEST    희망일(wishDate)  기준  —  아직 배정 안 된 접수
-AS_SCHEDULE   확정일(fixDate)   기준  —  기사가 배정된 일정
-```
+접수(희망일)와 배정(확정일)이 한 달력에 올라가고, 상태를 색으로 구분합니다. 하루에 일정이 몰리면 **`+N` 으로 접어** 칸이 터지지 않게 했습니다.
 
-네 가지 상태를 배경색으로 구분하고 하단에 범례를 뒀습니다. 색만 봐도 일정 상태가 구분됩니다.
+## 핵심 코드
 
-```
-접수완료 RECEIVED  ·  기사배정 ASSIGNED  ·  작업진행 IN_PROGRESS  ·  작업완료 COMPLETED
-```
+| 주제 | 판단 | 코드 |
+| --- | --- | --- |
+| 두 기준 날짜를 한 달력에 | 접수는 `wishDate`(희망일), 배정은 `fixDate`(확정일)로 **기준이 다르다**. 이미 배정된 접수는 빼서 같은 건이 두 번 나오지 않게 했다 | [`admin_schedule.js#L22`](src/main/resources/static/js/pages/schedule/admin_schedule.js#L22) |
+| 하루에 몰릴 때 | FullCalendar 기본 "+more" 를 끄고 **직접 접었다**. 기본 동작은 날짜를 이동시켜 버려서 기사 대시보드와 흐름이 달라진다 | [`admin_schedule.js#L101`](src/main/resources/static/js/pages/schedule/admin_schedule.js#L101) |
+| 시간 겹침 판별 | 구간 겹침을 **한 줄로**. 네 경우를 나눠 쓰면 경계에서 틀린다 | [`admin_schedule.js#L225`](src/main/resources/static/js/pages/schedule/admin_schedule.js#L225) |
+| 기사 필터 | 서버를 다시 부르지 않고 **받아 둔 목록을 그 자리에서 다시 거른다**. 10일짜리 과제에 기사 5명이라 서버 왕복이 더 비싸다 | [`admin_schedule.js#L22`](src/main/resources/static/js/pages/schedule/admin_schedule.js#L22) |
+| 배정과 상태 변경 | 일정 저장과 접수 상태 `ASSIGNED` 변경을 **한 흐름으로**. 따로 두면 하나만 성공했을 때 접수가 떠 있는 채로 남는다 | [`ScheduleService#L41`](src/main/java/com/green/Schedule/schedule/service/ScheduleService.java#L41) |
+| 조회 전용 resultMap | 공용 resultMap 을 돌려쓰지 않고 **이 조회에서 실제로 SELECT 되는 열만** 매핑 (아래 문제 해결) | [`schedule-mapper.xml#L17`](src/main/resources/mapper/schedule-mapper.xml#L17) |
 
-FullCalendar 의 기본 상단 UI(`headerToolbar`)는 끄고 이전/다음·일/주/월 버튼을 직접 만들어 프로젝트 톤에 맞췄습니다. 기사 필터는 서버를 다시 부르지 않고 **이미 받아 둔 목록을 그 자리에서 다시 거릅니다.**
-
-### 2. 기사 배정
-
-접수 건·담당 기사·방문 날짜·시작/종료 시간을 받아 배정합니다. 날짜와 시간은 따로 입력받되 **전송 직전에 하나로 합쳐** 서버가 바로 파싱할 수 있는 형태로 넘깁니다.
-
-배정을 저장하면서 **같은 흐름 안에서 해당 접수 건의 상태를 `ASSIGNED` 로 함께 바꿉니다.**
-
-### 3. 중복 배정 검증
-
-같은 기사에게 겹치는 시간대가 두 번 잡히지 않도록 막습니다. 구간 겹침은 한 줄로 판별했습니다.
-
-```javascript
-// 내 시작시간이 상대 종료시간보다 빠르고, 상대 시작시간이 내 종료시간보다 빠르면 겹친다
+```js
+// 두 구간이 겹치는가 — 시작이 상대 끝보다 앞이고, 상대 시작이 내 끝보다 앞이면 겹친다
 return startTime < existingEnd && existingStart < endTime;
 ```
 
-필수 항목 누락, 종료시간이 시작시간보다 빠른 경우를 먼저 거르고, 겹침이 확인되면 **기사명과 충돌한 시간대를 에러 메시지에 같이 띄워** 원인을 바로 알 수 있게 했습니다.
+## 문제 해결
 
----
+**상태값이 세 군데에 똑같이 들어갔다**
 
-## 설계에서 신경 쓴 것
+스케줄 목록을 조회했더니 `schedule.status` · `engineerDTO.status` · `requestDTO.status` 가 **전부 같은 값**이었습니다. 기사 상태(`WORK`)도, 접수 상태(`ASSIGNED`)도 전부 스케줄 상태로 덮여 있었습니다.
 
-- **4계층으로 나눴습니다.** `Controller → Service → Mapper(interface) → XML(SQL)`. Controller 는 흐름만 정하고, Service 가 "배정 저장 + 접수 상태 변경" 같은 여러 단계를 조합하고, Mapper 와 XML 이 DB 접근을 맡습니다. 한 계층이 바뀌어도 다른 계층에 영향이 덜 가도록 한 것입니다.
-- **캘린더는 라이브러리를 썼습니다.** 월/주/일 전환과 날짜 계산을 직접 짜면 시간이 오래 걸리고 버그가 날 위험이 컸습니다. 검증된 FullCalendar 6.1.11 (CDN) 을 쓰고, 꾸미는 부분만 직접 했습니다.
-- **화면 먼저, 데이터는 나중에.** DB 설계가 확정되기 전에 더미 데이터로 로직을 짜두면 실제 응답 구조가 달라질 때 다시 갈아엎어야 합니다. 골격과 `TODO` 주석만 남기고 설계가 끝난 뒤 연결했습니다.
+SQL 이 아니라 **resultMap 재사용**이 원인이었습니다.
 
----
-
-## 트러블슈팅 — 상태값이 세 군데에 똑같이 들어갔다
-
-일정 목록을 조회하면 **기사 근무상태와 접수 상태 자리에 엉뚱한 값**이 들어와 있었습니다. 둘 다 스케줄 상태와 같은 값이었습니다.
-
-세 테이블이 모두 `STATUS` 컬럼을 갖고 있는 게 바탕이었습니다.
-
-```
-ENGINEER.STATUS      WORK / REST
-REQUEST.STATUS       RECEIVED / ASSIGNED / IN_PROGRESS / COMPLETED
-AS_SCHEDULE.STATUS   ASSIGNED
+```sql
+SELECT ... , S.STATUS AS STATUS     -- STATUS 는 이 하나뿐이다
+FROM AS_SCHEDULE S
+LEFT JOIN ENGINEER E ON ...
+LEFT JOIN REQUEST  R ON ...
 ```
 
-쿼리는 `S.STATUS AS STATUS` 로 **스케줄 상태 하나만** 내려주는데, 기사·접수 정보를 같이 담으려고 `association` 으로 기존 resultMap 을 재사용한 게 문제였습니다. **그 둘도 `STATUS` 를 매핑하고 있어서** 하나뿐인 값이 세 군데에 다 들어갔습니다.
+쿼리가 돌려주는 `STATUS` 는 하나인데 `engineer` 와 `request` resultMap **둘 다** `STATUS` 를 매핑하고 있었습니다. `association` 으로 그대로 재사용하니 그 하나뿐인 열이 중첩 객체 세 곳에 전부 들어갔습니다.
 
-```
-쿼리의 STATUS (= AS_SCHEDULE.STATUS)
-   ├→ scheduleDTO.status    의도한 것
-   ├→ engineerDTO.status    기사 근무상태 자리에 스케줄 상태가
-   └→ requestDTO.status     접수 상태 자리에도 스케줄 상태가
-```
+컬럼에 별칭을 더 붙이는 대신 **이 조회 전용 resultMap 을 따로** 만들었습니다. 실제로 SELECT 되는 열만 매핑하니 `STATUS` 가 애초에 들어갈 자리가 없습니다.
+→ [`schedule-mapper.xml#L17`](src/main/resources/mapper/schedule-mapper.xml#L17)
 
-**고치는 방법 셋을 놓고 비교했습니다.**
+**배운 것** — resultMap 을 돌려쓰면 코드는 짧아지지만, **열 이름이 겹치는 순간 조용히 틀립니다.** 에러도 안 나고 값만 바뀌어 있어서 찾는 데 시간이 걸렸습니다. 조회마다 필요한 열이 다르면 **조회 전용 resultMap 을 따로 두는 쪽**이 안전합니다.
 
-| 방법 | 판단 |
-|---|---|
-| 컬럼 이름 변경 | 팀원이 담당한 테이블까지 건드려야 해 다른 쿼리와 DTO 가 연쇄로 깨진다 |
-| `columnPrefix` 사용 | 쿼리와 매핑 양쪽에 접두사 규칙을 새로 깔아야 한다. 필요한 건 상태값 하나인데 과하다 |
-| **조회 전용 resultMap 분리** ✅ | 실제로 SELECT 되는 컬럼만 매핑한다. 팀원 파일을 안 건드리고 이 쿼리 안에서 끝난다 |
+## 한계
 
-```xml
-<!-- selectScheduleList 전용 — STATUS 를 아예 매핑하지 않는다 -->
-<resultMap id="scheduleEngineer" type="...EngineerDTO">
-  <id     column="ENGINEER_NO"   property="engineerNo"/>
-  <result column="ENGINEER_NAME" property="engineerName"/>
-</resultMap>
-```
-
-같은 자리에서 `INNER JOIN` 을 `LEFT JOIN` 으로 바꿨습니다. 기사나 접수 정보가 비어도 **스케줄 자체는 캘린더에 남아야** 하기 때문입니다.
-
-> **재사용이 늘 이득은 아니라는 걸 배웠습니다.** resultMap 은 "이 DTO 를 어떻게 채울지"가 아니라 **"이 쿼리 결과를 어떻게 읽을지"** 에 가깝습니다. 쿼리가 다르면 읽는 법도 달라야 합니다.
-
-### 덧 — 날짜·시간 타입 맞추기
-
-이 과정에서 `startTime`/`endTime` 타입도 `java.sql.Time` 에서 `LocalTime` 으로 바꿨습니다. DB 의 TIME 컬럼을 자바에서 어떤 타입으로 받을지는 당연해 보였는데, 막상 비교·계산을 하려니 오래된 API 라 번거로웠습니다. **DB 타입과 자바 타입을 맞추는 일이 생각보다 손이 많이 간다**는 걸 이때 알았습니다.
-
----
-
-## 작업 기록
-
-작업일지를 Notion 에 남겼습니다.
-
-| 날짜 | 내용 |
-|---|---|
-| 09/08 | [캘린더 라이브러리 학습과 화면 기획](https://scratched-ceramic-15c.notion.site/2026-09-08-3dd90bcc7b0781e1ad43eb0d6cdc21ca) |
-| 09/09 | [콘텐츠 영역 분리로 캘린더 미리보기 제작](https://scratched-ceramic-15c.notion.site/2026-09-09-3dd90bcc7b0781dbaa49d6c94d6216c9) |
-| 09/10 | [AS 기사 일정 배정 화면 설계 및 캘린더 연동 착수](https://scratched-ceramic-15c.notion.site/2026-09-10-AS-3d790bcc7b078108b781fb18134e89da) |
-| 09/11 | [실제 프로젝트 연동 시작과 첫 버그 수정](https://scratched-ceramic-15c.notion.site/2026-09-11-3dd90bcc7b07811d93d2f5804aaf9d8a) |
-| **09/14** | **[캘린더 미표시 버그 원인 분석과 중복 배정 검증 추가](https://scratched-ceramic-15c.notion.site/2026-09-14-3dd90bcc7b0781358221c2ba374db2db)** |
-| 09/15 | [CSS 우선순위 문제 해결과 코드 주석 정리](https://scratched-ceramic-15c.notion.site/2026-09-15-CSS-3dd90bcc7b0781bf8661c058e3562001) |
-
-> 9/11 에 SQL 쪽 컬럼 충돌을 별칭으로 정리하고 다 고쳤다고 생각했는데, **9/14 에 resultMap 쪽에 같은 충돌이 한 겹 더 있었다**는 걸 알게 됐습니다. 두 글을 이어서 읽으면 그 과정이 보입니다.
-
----
-
-## 알려진 제약 · 보완할 점
-
-팀 규칙 중에 **"한계도 함께 — 해결 못한 것은 숨기지 않고 다음 과제로"** 가 있었습니다. 아래는 그 규칙에 따라 정리한 것으로, 발표 질의응답을 준비하며 실제 코드를 다시 훑다가 찾았습니다. **고치지 못한 채로 남아 있습니다.**
-
-- **중복 배정 검증이 프론트엔드에만 있습니다.** 폼을 거치지 않고 요청을 직접 보내면 우회됩니다. 서버에도 같은 검증이 있어야 합니다
-- **`insertSchedule` 과 `updateReceiveRequest` 가 `@Transactional` 로 묶여 있지 않습니다.** 하나만 실패하면 배정은 됐는데 접수 상태는 그대로인 불일치가 생깁니다
-- **배정 변경·취소·재배정 기능이 없습니다.** 최초 배정만 가능합니다
-- **과거 날짜로 배정하는 것을 막는 검증이 없습니다** (프론트·백엔드 모두)
-- **기사 근무시간(`workStartTime`/`workEndTime`) 밖 배정을 막는 로직이 없습니다**
-- **퇴사 기사 재검증이 없습니다.** 배정 드롭다운에서는 `WHERE STATUS='WORK'` 로 빠지지만, 저장 시점에 서버가 다시 확인하지는 않습니다
-- **동시성 제어가 없습니다.** 관리자 두 명이 같은 시간대에 동시에 배정하는 상황은 처리돼 있지 않습니다
-- **`insertSchedule` 에 `useGeneratedKeys`/`keyProperty` 가 없어** 생성된 `SCHEDULE_NO` 가 저장 후 DTO 로 돌아오지 않습니다
-
-> 첫 번째와 두 번째가 가장 큽니다. **"화면에서 막았으니 됐다"** 고 생각한 것이 이 프로젝트에서 가장 아쉬운 판단이었습니다.
-> 발표 자체평가에도 **"브라우저 검증만으로는 겹침을 완전히 막지 못함"** 을 제가 얻은 것 중 하나로 적었습니다.
-
----
-
-## 기술 스택
-
-| | |
-|---|---|
-| **Backend** | Java 17 · Spring Boot 4.0.8 · MyBatis 4.0.1 · Thymeleaf (layout-dialect) · Lombok |
-| **Database** | MariaDB |
-| **Frontend** | JavaScript · FullCalendar 6.1.11 · HTML/CSS |
-| **협업** | Git (`main` / `dev` / `ft/` · `fix/` · `style/` 접두어 · Pull Request) · Notion · ERDCloud |
-
----
+- 중복 배정 검증이 **화면에서만** 이뤄집니다. 같은 요청을 직접 보내면 막히지 않아, 서버에서도 한 번 더 봐야 합니다.
+- 기사 근무 시간(`WORK_START_TIME`·`WORK_END_TIME`)을 배정할 때 보지 않습니다.
+- 배정 취소·변경 화면이 없습니다. 10일 안에 접수→배정→보고 흐름을 먼저 세웠습니다.
 
 ## 실행 방법
 
-### 1. 데이터베이스
+1. MariaDB 에 `project-1` 데이터베이스를 만들고 `테이블생성쿼리.sql` 을 실행합니다 (표 6개와 더미 데이터가 함께 들어 있습니다).
+2. `application.yaml` 의 `datasource` 를 자신의 DB 에 맞춥니다.
+3. 서버를 실행하고 `admin` / `asdf` 로 로그인한 뒤 **일정 관리**로 들어갑니다.
 
-```bash
-mysql -u <user> -p <db> < 테이블생성쿼리.sql
-```
+> 더미 데이터의 일정은 2026년 9월에 몰려 있습니다. 달력을 9월로 옮기면 보입니다.
 
-샘플 데이터(기사·접수·배정·결과)가 함께 들어 있습니다.
+## 배운 점
 
-### 2. 접속 정보
+1. **짧아지는 코드가 늘 좋은 건 아닙니다.** resultMap 을 돌려쓰면 줄은 줄지만 열 이름이 겹치는 순간 에러 없이 틀립니다.
+2. **기준이 다른 데이터를 한 화면에 올릴 때는 기준부터 정합니다.** 접수는 희망일, 배정은 확정일이라는 걸 먼저 못 박고 나서야 달력이 정리됐습니다.
+3. **화면 검증은 서버 검증이 아닙니다.** 이 과제에서는 화면에서만 막았는데, 다음 과제부터는 같은 규칙을 서버에서도 확인했습니다.
 
-`src/main/resources/application.yaml` 의 `spring.datasource` 를 본인 환경에 맞게 바꿔 주세요.
+## 프로젝트 시리즈
 
-### 3. 실행
+**1차 AS기사 스케줄 관리 (이 저장소)** · [2차 전력사용량 예측 대시보드](https://github.com/rlawns2848-hue/Predict) · [3차 해상교통 안전경로 예측](https://github.com/rlawns2848-hue/Navigate)
 
-```bash
-./gradlew bootRun
-```
-
-`http://localhost:8080` · 관리자 일정관리는 `/as-schedule` 입니다.
-
----
-
-## 팀 구성
-
-**화면 단위로 나눴습니다.** 백엔드·프론트로 나누면 서로 기다리는 시간이 길어져서, 각자 화면 하나를 처음부터 끝까지 맡는 쪽을 택했습니다.
-
-| 담당 | 범위 |
-|---|---|
-| 이웅진 (팀장) | 공통 · 로그인 · 통합 — 메인/로그인, 공통 레이아웃, 권한 분기, 접근제어 인터셉터, Git 통합 |
-| 최준영 | 관리자 대시보드 · 기사관리 — 상태별 통계 카드, 최근 접수 현황, 기사 등록·수정·퇴사 |
-| 박성인 | 기사 대시보드 · AS결과보고 — 오늘 일정, 사진 포함 결과 등록, 문자·만족도 연동 |
-| **김성준** | **관리자 일정관리 — 캘린더 출력, 기사 배정, 배정 단계 겹침 확인, 상태별 표시** |
-
-스케줄 테이블이 접수·기사 테이블을 둘 다 참조해서, **외래키 컬럼명과 자료형을 팀원들과 먼저 맞춘 뒤** 코드를 짰습니다.
