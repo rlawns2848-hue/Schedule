@@ -16,7 +16,7 @@
 | **내 담당** | **관리자 일정 관리 화면 전체 — Controller 부터 CSS 까지** |
 | 기술 | Java 17 · Spring Boot · MyBatis · MariaDB · Thymeleaf · FullCalendar |
 | 원본 저장소 | [`ung-Jin/Schedule`](https://github.com/ung-Jin/Schedule) 의 fork |
-| 작업일지 | [Notion](https://scratched-ceramic-15c.notion.site/40090bcc7b0780409d99e0e6757d8e30) |
+| 작업일지 | [Notion](https://scratched-ceramic-15c.notion.site/AS-3d590bcc7b07806ea692f1d4b17e1024) |
 
 화면 하나를 받아 **화면 → JS → Controller → Service → Mapper → DB** 한 세로줄을 끝까지 맡았습니다.
 
