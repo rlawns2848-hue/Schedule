@@ -18,7 +18,7 @@
 | 원본 저장소 | [`ung-Jin/Schedule`](https://github.com/ung-Jin/Schedule) 의 fork |
 | 작업일지 | [Notion](https://scratched-ceramic-15c.notion.site/40090bcc7b0780409d99e0e6757d8e30) |
 
-세 프로젝트 중 **처음이자 가장 짧았던** 과제입니다. 화면 하나를 받아 **화면 → JS → Controller → Service → Mapper → DB** 한 세로줄을 끝까지 맡았습니다.
+화면 하나를 받아 **화면 → JS → Controller → Service → Mapper → DB** 한 세로줄을 끝까지 맡았습니다.
 
 ## 내가 만든 것
 
