@@ -13,7 +13,7 @@
 | 구분 | 내용 |
 | --- | --- |
 | 팀·기간 | 4인 · 2026.09.08 ~ 09.17 (10일) |
-| **내 담당** | **관리자 일정 관리 화면 전체 — Controller 부터 CSS 까지 (약 1,150줄)** |
+| **내 담당** | **관리자 일정 관리 화면 전체 — Controller 부터 CSS 까지** |
 | 기술 | Java 17 · Spring Boot · MyBatis · MariaDB · Thymeleaf · FullCalendar |
 | 원본 저장소 | [`ung-Jin/Schedule`](https://github.com/ung-Jin/Schedule) 의 fork |
 | 작업일지 | [Notion](https://scratched-ceramic-15c.notion.site/40090bcc7b0780409d99e0e6757d8e30) |
@@ -24,11 +24,11 @@
 
 | | 하는 일 | 파일 |
 | --- | --- | --- |
-| **일정 캘린더** | 기준 날짜가 다른 접수와 배정을 한 달력에 · 상태별 4색 | [`admin_schedule.js`](src/main/resources/static/js/pages/schedule/admin_schedule.js) 373줄 |
-| **기사 배정** | 날짜·시간을 따로 받아 전송 직전 하나로 · 배정과 접수 상태 변경을 한 흐름으로 | [`ScheduleService`](src/main/java/com/green/Schedule/schedule/service/ScheduleService.java) 51줄 |
+| **일정 캘린더** | 기준 날짜가 다른 접수와 배정을 한 달력에 · 상태별 4색 | [`admin_schedule.js`](src/main/resources/static/js/pages/schedule/admin_schedule.js) |
+| **기사 배정** | 날짜·시간을 따로 받아 전송 직전 하나로 · 배정과 접수 상태 변경을 한 흐름으로 | [`ScheduleService`](src/main/java/com/green/Schedule/schedule/service/ScheduleService.java) |
 | **중복 배정 검증** | 같은 기사의 시간대 겹침 차단 · 충돌한 기사명과 시간을 에러에 같이 | [`admin_schedule.js#L214`](src/main/resources/static/js/pages/schedule/admin_schedule.js#L214) |
-| **조회 쿼리** | 스케줄 · 기사 · 접수를 한 번에, 조회 전용 resultMap 으로 | [`schedule-mapper.xml`](src/main/resources/mapper/schedule-mapper.xml) 129줄 |
-| **화면 틀·스타일** | 달력 레이아웃, 배정 폼, 범례 | [`admin_schedule.css`](src/main/resources/static/css/pages/schedule/admin_schedule.css) 353줄 |
+| **조회 쿼리** | 스케줄 · 기사 · 접수를 한 번에, 조회 전용 resultMap 으로 | [`schedule-mapper.xml`](src/main/resources/mapper/schedule-mapper.xml) |
+| **화면 틀·스타일** | 달력 레이아웃, 배정 폼, 범례 | [`admin_schedule.css`](src/main/resources/static/css/pages/schedule/admin_schedule.css) |
 
 <details><summary>팀원 담당</summary>
 
@@ -99,8 +99,4 @@ LEFT JOIN REQUEST  R ON ...
 1. **짧아지는 코드가 늘 좋은 건 아닙니다.** resultMap 을 돌려쓰면 줄은 줄지만 열 이름이 겹치는 순간 에러 없이 틀립니다.
 2. **기준이 다른 데이터를 한 화면에 올릴 때는 기준부터 정합니다.** 접수는 희망일, 배정은 확정일이라는 걸 먼저 못 박고 나서야 달력이 정리됐습니다.
 3. **화면 검증은 서버 검증이 아닙니다.** 이 과제에서는 화면에서만 막았는데, 다음 과제부터는 같은 규칙을 서버에서도 확인했습니다.
-
-## 프로젝트 시리즈
-
-**1차 AS기사 스케줄 관리 (이 저장소)** · [2차 전력사용량 예측 대시보드](https://github.com/rlawns2848-hue/Predict) · [3차 해상교통 안전경로 예측](https://github.com/rlawns2848-hue/Navigate)
 
